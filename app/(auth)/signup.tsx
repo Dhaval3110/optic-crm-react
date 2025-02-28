@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, ActivityIndicator, Alert, Animated } from 'react-native';
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, ActivityIndicator, Animated } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 import { colors, typography, spacing, shadows, borderRadius } from '@/constants/Theme';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function LoginScreen() {
+export default function SignupScreen() {
   const router = useRouter();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [shopName, setShopName] = useState('');
+  const [city, setCity] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [shopNameError, setShopNameError] = useState('');
+  const [cityError, setCityError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const { signIn, error } = useAuth();
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [fadeAnim] = useState(new Animated.Value(0));
 
   React.useEffect(() => {
@@ -35,12 +45,33 @@ export default function LoginScreen() {
     return hasLength && hasSpecial && hasNumber && hasLetter;
   };
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     let isValid = true;
     
     // Reset errors
+    setFirstNameError('');
+    setLastNameError('');
+    setShopNameError('');
+    setCityError('');
     setEmailError('');
     setPasswordError('');
+    setConfirmPasswordError('');
+
+    // Validate first name
+    if (!firstName) {
+      setFirstNameError('First name is required');
+      isValid = false;
+    }
+
+    // Validate last name
+    if (!lastName) {
+      setLastNameError('Last name is required');
+      isValid = false;
+    }
+
+    // Shop name is optional, no validation needed
+
+    // City is optional, no validation needed
 
     // Validate email
     if (!email) {
@@ -60,13 +91,23 @@ export default function LoginScreen() {
       isValid = false;
     }
 
+    // Validate confirm password
+    if (!confirmPassword) {
+      setConfirmPasswordError('Please confirm your password');
+      isValid = false;
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError('Passwords do not match');
+      isValid = false;
+    }
+
     if (!isValid) return;
 
     setLoading(true);
     try {
-      await signIn(email, password);
+      // TODO: Implement signup logic here
+      console.log('Signup with:', { firstName, lastName, shopName, city, email, password });
     } catch (err) {
-      console.error('Login error:', err);
+      console.error('Signup error:', err);
     } finally {
       setLoading(false);
     }
@@ -74,21 +115,75 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: 'Login', headerShown: false }} />
-      
+      <Stack.Screen options={{ 
+        title: 'Create Account',
+        headerShown: true,
+        headerLeft: () => (
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        )
+      }} />
+
       <Animated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
-        <View style={styles.logoContainer}>
-          <Text style={styles.title}>OpticCRM</Text>
-          <Text style={styles.subtitle}>Sign in to your account</Text>
-        </View>
-        
-        {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        )}
+
         
         <View style={styles.inputContainer}>
+          <TextInput
+            style={[styles.input, firstNameError && styles.inputError]}
+            placeholder="First Name"
+            placeholderTextColor={colors.gray[400]}
+            value={firstName}
+            onChangeText={(text) => {
+              setFirstName(text);
+              setFirstNameError('');
+            }}
+            autoCapitalize="words"
+          />
+          {firstNameError && <Text style={styles.validationError}>{firstNameError}</Text>}
+
+          <TextInput
+            style={[styles.input, lastNameError && styles.inputError]}
+            placeholder="Last Name"
+            placeholderTextColor={colors.gray[400]}
+            value={lastName}
+            onChangeText={(text) => {
+              setLastName(text);
+              setLastNameError('');
+            }}
+            autoCapitalize="words"
+          />
+          {lastNameError && <Text style={styles.validationError}>{lastNameError}</Text>}
+
+          <TextInput
+            style={[styles.input, shopNameError && styles.inputError]}
+            placeholder="Shop Name"
+            placeholderTextColor={colors.gray[400]}
+            value={shopName}
+            onChangeText={(text) => {
+              setShopName(text);
+              setShopNameError('');
+            }}
+            autoCapitalize="words"
+          />
+          {shopNameError && <Text style={styles.validationError}>{shopNameError}</Text>}
+
+          <TextInput
+            style={[styles.input, cityError && styles.inputError]}
+            placeholder="City"
+            placeholderTextColor={colors.gray[400]}
+            value={city}
+            onChangeText={(text) => {
+              setCity(text);
+              setCityError('');
+            }}
+            autoCapitalize="words"
+          />
+          {cityError && <Text style={styles.validationError}>{cityError}</Text>}
+
           <TextInput
             style={[styles.input, emailError && styles.inputError]}
             placeholder="Email"
@@ -115,36 +210,31 @@ export default function LoginScreen() {
             secureTextEntry
           />
           {passwordError && <Text style={styles.validationError}>{passwordError}</Text>}
+
+          <TextInput
+            style={[styles.input, confirmPasswordError && styles.inputError]}
+            placeholder="Confirm Password"
+            placeholderTextColor={colors.gray[400]}
+            value={confirmPassword}
+            onChangeText={(text) => {
+              setConfirmPassword(text);
+              setConfirmPasswordError('');
+            }}
+            secureTextEntry
+          />
+          {confirmPasswordError && <Text style={styles.validationError}>{confirmPasswordError}</Text>}
         </View>
-        
-        <TouchableOpacity 
-          style={styles.forgotPasswordButton}
-          onPress={() => console.log('Navigate to forgot password')}
-        >
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity 
           style={[styles.button, loading && styles.buttonDisabled]} 
-          onPress={handleLogin}
+          onPress={handleSignup}
           disabled={loading}
         >
           {loading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>Sign In</Text>
+            <Text style={styles.buttonText}>Create Account</Text>
           )}
-        </TouchableOpacity>
-
-        <View style={styles.dividerContainer}>
-          <Text style={styles.dividerText}>Don't have an account?</Text>
-        </View>
-
-        <TouchableOpacity 
-          style={styles.signupButton}
-          onPress={() => router.push('/(auth)/signup')}
-        >
-          <Text style={styles.signupButtonText}>Create an account</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -156,10 +246,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.light,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing['2xl'],
+    paddingBottom: spacing.md,
+    backgroundColor: colors.white,
+    ...shadows.sm,
+  },
+  backButton: {
+    padding: spacing.sm,
+  },
   formContainer: {
     flex: 1,
-    justifyContent: 'center',
-    padding: spacing['2xl'],
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
     maxWidth: 400,
     width: '100%',
     alignSelf: 'center',
@@ -187,7 +289,7 @@ const styles = StyleSheet.create({
     borderColor: colors.gray[200],
     borderRadius: borderRadius.lg,
     padding: spacing.md,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.lg,
     fontSize: typography.sizes.base,
     color: colors.dark,
     ...shadows.sm,
@@ -208,29 +310,13 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.semibold,
   },
-  errorContainer: {
-    backgroundColor: colors.danger,
-    padding: spacing.md,
-    borderRadius: borderRadius.md,
-    marginBottom: spacing.xl,
-  },
-  errorText: {
-    color: colors.white,
-    textAlign: 'center',
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.medium,
-  },
-  inputError: {
-    borderColor: colors.danger,
-    borderWidth: 1,
-  },
   validationError: {
     color: colors.danger,
     fontSize: typography.sizes.sm,
     marginTop: spacing.xs,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
   },
-  signupButton: {
+  loginButton: {
     backgroundColor: colors.white,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
@@ -241,7 +327,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     ...shadows.sm,
   },
-  signupButtonText: {
+  loginButtonText: {
     color: colors.primary,
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.semibold,
@@ -255,13 +341,8 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.medium,
   },
-  forgotPasswordButton: {
-    alignSelf: 'flex-end',
-    marginBottom: spacing.lg,
-  },
-  forgotPasswordText: {
-    color: colors.primary,
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.medium,
+  inputError: {
+    borderColor: colors.danger,
+    borderWidth: 1,
   },
 });
