@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: spacing.xl,
+    padding: spacing.lg,
     alignItems: 'center',
     justifyContent: 'space-between',
     minHeight: '100%',
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   illustrationContainer: {
     width: '100%',
     aspectRatio: 1,
-    marginTop: spacing['4xl'],
+    marginTop: spacing.xl,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: spacing.md,
-    padding: spacing.xl,
+    padding: spacing.lg,
   },
   block: {
     width: 80,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   securityIconsContainer: {
     flexDirection: 'row',
-    marginTop: spacing.xl,
+    marginTop: spacing.lg,
     gap: spacing.lg,
   },
   securityIcon: {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     alignItems: 'center',
-    marginVertical: spacing['2xl'],
+    marginVertical: spacing.xl,
   },
   title: {
     fontSize: typography.sizes['4xl'],
@@ -147,12 +147,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     marginTop: 'auto',
-    paddingVertical: spacing.xl,
+    paddingVertical: spacing.lg,
   },
   signInButton: {
     backgroundColor: colors.primary,
     borderRadius: borderRadius.lg,
-    padding: spacing.lg,
+    padding: spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
     ...shadows.md,
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: spacing.xl,
+    marginTop: spacing.lg,
   },
   registerText: {
     fontSize: typography.sizes.base,

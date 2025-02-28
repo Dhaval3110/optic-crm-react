@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, View, Text, TouchableOpacity, ActivityIndicator, Alert, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 import { colors, typography, spacing, shadows, borderRadius } from '@/constants/Theme';
@@ -8,6 +9,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -78,8 +80,8 @@ export default function LoginScreen() {
       
       <Animated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
         <View style={styles.logoContainer}>
-          <Text style={styles.title}>OpticCRM</Text>
-          <Text style={styles.subtitle}>Sign in to your account</Text>
+          <Text style={styles.title}>Let's Sign you in.</Text>
+          <Text style={styles.subtitle}>Welcome back, You've been missed!</Text>
         </View>
         
         {error && (
@@ -89,9 +91,10 @@ export default function LoginScreen() {
         )}
         
         <View style={styles.inputContainer}>
+          {/* <Text style={styles.inputLabel}>Email</Text> */}
           <TextInput
             style={[styles.input, emailError && styles.inputError]}
-            placeholder="Email"
+            placeholder="Your email"
             placeholderTextColor={colors.gray[400]}
             value={email}
             onChangeText={(text) => {
@@ -103,17 +106,30 @@ export default function LoginScreen() {
           />
           {emailError && <Text style={styles.validationError}>{emailError}</Text>}
           
-          <TextInput
-            style={[styles.input, passwordError && styles.inputError]}
-            placeholder="Password"
-            placeholderTextColor={colors.gray[400]}
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text);
-              setPasswordError('');
-            }}
-            secureTextEntry
-          />
+          {/* <Text style={styles.inputLabel}>Password</Text> */}
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={[styles.passwordInput, passwordError && styles.inputError]}
+              placeholder="Password"
+              placeholderTextColor={colors.gray[400]}
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                setPasswordError('');
+              }}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity 
+              style={styles.passwordToggle}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Ionicons 
+                name={showPassword ? "eye-off" : "eye"} 
+                size={24} 
+                color={colors.gray[400]} 
+              />
+            </TouchableOpacity>
+          </View>
           {passwordError && <Text style={styles.validationError}>{passwordError}</Text>}
         </View>
         
@@ -159,14 +175,14 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     justifyContent: 'center',
-    padding: spacing['2xl'],
+    padding: spacing.xl,
     maxWidth: 400,
     width: '100%',
     alignSelf: 'center',
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: spacing['2xl'],
+    marginBottom: spacing.xl,
   },
   title: {
     fontSize: typography.sizes['4xl'],
@@ -179,7 +195,7 @@ const styles = StyleSheet.create({
     color: colors.gray[600],
   },
   inputContainer: {
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
   input: {
     backgroundColor: colors.white,
@@ -187,7 +203,7 @@ const styles = StyleSheet.create({
     borderColor: colors.gray[200],
     borderRadius: borderRadius.lg,
     padding: spacing.md,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
     fontSize: typography.sizes.base,
     color: colors.dark,
     ...shadows.sm,
@@ -210,9 +226,9 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     backgroundColor: colors.danger,
-    padding: spacing.md,
+    padding: spacing.sm,
     borderRadius: borderRadius.md,
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
   errorText: {
     color: colors.white,
@@ -228,7 +244,7 @@ const styles = StyleSheet.create({
     color: colors.danger,
     fontSize: typography.sizes.sm,
     marginTop: spacing.xs,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
   },
   signupButton: {
     backgroundColor: colors.white,
@@ -248,16 +264,38 @@ const styles = StyleSheet.create({
   },
   dividerContainer: {
     alignItems: 'center',
-    marginVertical: spacing.md,
+    marginVertical: spacing.sm,
   },
   dividerText: {
     color: colors.gray[600],
     fontSize: typography.sizes.sm,
+    marginBottom: spacing.xs,
     fontWeight: typography.weights.medium,
+  },
+  passwordContainer: {
+    position: 'relative',
+    marginBottom: spacing.xs,
+  },
+  passwordInput: {
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.gray[200],
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
+    paddingRight: spacing.xl,
+    fontSize: typography.sizes.base,
+    color: colors.dark,
+    ...shadows.sm,
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: spacing.md,
+    top: '50%',
+    transform: [{ translateY: -12 }],
   },
   forgotPasswordButton: {
     alignSelf: 'flex-end',
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
   forgotPasswordText: {
     color: colors.primary,
