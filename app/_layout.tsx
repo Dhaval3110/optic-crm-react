@@ -62,8 +62,8 @@ function RootLayoutNav() {
     const inAuthGroup = segments[0] === '(auth)';
 
     if (!session && !inAuthGroup) {
-      // Redirect to the login page if not authenticated
-      router.replace('/(auth)/login');
+      // Redirect to the onboard screen if not authenticated
+      router.replace('/(auth)/onboard');
     } else if (session && inAuthGroup) {
       // Redirect to the main app if authenticated
       router.replace('/(tabs)');
