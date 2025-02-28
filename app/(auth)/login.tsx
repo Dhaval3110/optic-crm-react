@@ -117,6 +117,13 @@ export default function LoginScreen() {
         </View>
         
         <TouchableOpacity 
+          style={styles.forgotPasswordButton}
+          onPress={() => console.log('Navigate to forgot password')}
+        >
+          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
           style={[styles.button, loading && styles.buttonDisabled]} 
           onPress={handleLogin}
           disabled={loading}
@@ -126,6 +133,17 @@ export default function LoginScreen() {
           ) : (
             <Text style={styles.buttonText}>Sign In</Text>
           )}
+        </TouchableOpacity>
+
+        <View style={styles.dividerContainer}>
+          <Text style={styles.dividerText}>Don't have an account?</Text>
+        </View>
+
+        <TouchableOpacity 
+          style={styles.signupButton}
+          onPress={() => console.log('Navigate to signup')}
+        >
+          <Text style={styles.signupButtonText}>Create an account</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -210,5 +228,39 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     marginTop: spacing.xs,
     marginBottom: spacing.sm,
+  },
+  signupButton: {
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    ...shadows.sm,
+  },
+  signupButtonText: {
+    color: colors.primary,
+    fontSize: typography.sizes.base,
+    fontWeight: typography.weights.semibold,
+  },
+  dividerContainer: {
+    alignItems: 'center',
+    marginVertical: spacing.md,
+  },
+  dividerText: {
+    color: colors.gray[600],
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.medium,
+  },
+  forgotPasswordButton: {
+    alignSelf: 'flex-end',
+    marginBottom: spacing.lg,
+  },
+  forgotPasswordText: {
+    color: colors.primary,
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.medium,
   },
 });
