@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Animated, ScrollView } from '
 import { Stack, useRouter } from 'expo-router';
 import { colors, typography, spacing, shadows, borderRadius } from '@/constants/Theme';
 import { Ionicons } from '@expo/vector-icons';
+import { TextInput } from '@react-native-material/core';
 
 export default function OnboardScreen() {
   const router = useRouter();
@@ -53,12 +54,14 @@ export default function OnboardScreen() {
               <Text style={styles.signInButtonText}>Sign in</Text>
             </TouchableOpacity>
 
-            <View style={styles.registerContainer}>
+            <TouchableOpacity 
+              style={styles.registerContainer}
+              onPress={() => router.push('/(auth)/signup')}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
               <Text style={styles.registerText}>Don't have an account? </Text>
-              <TouchableOpacity onPress={() => router.push('/(auth)/signup')}>
-                <Text style={styles.registerLink}>Register</Text>
-              </TouchableOpacity>
-            </View>
+              <Text style={styles.registerLink}>Register</Text>
+            </TouchableOpacity>
           </View>
         </Animated.View>
       </ScrollView>
@@ -167,10 +170,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: spacing.lg,
+    padding: spacing.md,
+    minHeight: 44
   },
   registerText: {
     fontSize: typography.sizes.base,
     color: colors.gray[600],
+  },
+  registerButton: {
+    padding: spacing.md,
+    marginLeft: spacing.xs,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 80,
+    minHeight: 44,
   },
   registerLink: {
     fontSize: typography.sizes.base,

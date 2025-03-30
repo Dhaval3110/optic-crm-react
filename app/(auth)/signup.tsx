@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, ActivityIndicator, Animated } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Animated } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 import { colors, typography, spacing, shadows, borderRadius } from '@/constants/Theme';
 import { Ionicons } from '@expo/vector-icons';
+import CustomTextInput from '@/src/components/CustomTextInput';
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -118,12 +119,19 @@ export default function SignupScreen() {
       <Stack.Screen options={{ 
         title: 'Create Account',
         headerShown: true,
+        headerStyle: {
+          backgroundColor: colors.primary,
+        },
+        headerTintColor: colors.white,
+        headerTitleStyle: {
+          color: colors.white,
+        },
         headerLeft: () => (
           <TouchableOpacity 
-            style={styles.backButton}
+            style={[styles.backButton, { marginLeft: -spacing.sm }]}
             onPress={() => router.back()}
           >
-            <Ionicons name="arrow-back" size={24} color={colors.primary} />
+            <Ionicons name="arrow-back" size={24} color={colors.white} />
           </TouchableOpacity>
         )
       }} />
@@ -132,62 +140,52 @@ export default function SignupScreen() {
 
         
         <View style={styles.inputContainer}>
-          <TextInput
-            style={[styles.input, firstNameError && styles.inputError]}
-            placeholder="First Name"
-            placeholderTextColor={colors.gray[400]}
+          <CustomTextInput
+            label="First Name"
             value={firstName}
             onChangeText={(text) => {
               setFirstName(text);
               setFirstNameError('');
             }}
             autoCapitalize="words"
+            error={firstNameError}
           />
-          {firstNameError && <Text style={styles.validationError}>{firstNameError}</Text>}
 
-          <TextInput
-            style={[styles.input, lastNameError && styles.inputError]}
-            placeholder="Last Name"
-            placeholderTextColor={colors.gray[400]}
+          <CustomTextInput
+            label="Last Name"
             value={lastName}
             onChangeText={(text) => {
               setLastName(text);
               setLastNameError('');
             }}
             autoCapitalize="words"
+            error={lastNameError}
           />
-          {lastNameError && <Text style={styles.validationError}>{lastNameError}</Text>}
 
-          <TextInput
-            style={[styles.input, shopNameError && styles.inputError]}
-            placeholder="Shop Name"
-            placeholderTextColor={colors.gray[400]}
+          <CustomTextInput
+            label="Shop Name"
             value={shopName}
             onChangeText={(text) => {
               setShopName(text);
               setShopNameError('');
             }}
             autoCapitalize="words"
+            error={shopNameError}
           />
-          {shopNameError && <Text style={styles.validationError}>{shopNameError}</Text>}
 
-          <TextInput
-            style={[styles.input, cityError && styles.inputError]}
-            placeholder="City"
-            placeholderTextColor={colors.gray[400]}
+          <CustomTextInput
+            label="City"
             value={city}
             onChangeText={(text) => {
               setCity(text);
               setCityError('');
             }}
             autoCapitalize="words"
+            error={cityError}
           />
-          {cityError && <Text style={styles.validationError}>{cityError}</Text>}
 
-          <TextInput
-            style={[styles.input, emailError && styles.inputError]}
-            placeholder="Email"
-            placeholderTextColor={colors.gray[400]}
+          <CustomTextInput
+            label="Email"
             value={email}
             onChangeText={(text) => {
               setEmail(text);
@@ -195,34 +193,30 @@ export default function SignupScreen() {
             }}
             autoCapitalize="none"
             keyboardType="email-address"
+            error={emailError}
           />
-          {emailError && <Text style={styles.validationError}>{emailError}</Text>}
           
-          <TextInput
-            style={[styles.input, passwordError && styles.inputError]}
-            placeholder="Password"
-            placeholderTextColor={colors.gray[400]}
+          <CustomTextInput
+            label="Password"
             value={password}
             onChangeText={(text) => {
               setPassword(text);
               setPasswordError('');
             }}
             secureTextEntry
+            error={passwordError}
           />
-          {passwordError && <Text style={styles.validationError}>{passwordError}</Text>}
 
-          <TextInput
-            style={[styles.input, confirmPasswordError && styles.inputError]}
-            placeholder="Confirm Password"
-            placeholderTextColor={colors.gray[400]}
+          <CustomTextInput
+            label="Confirm Password"
             value={confirmPassword}
             onChangeText={(text) => {
               setConfirmPassword(text);
               setConfirmPasswordError('');
             }}
             secureTextEntry
+            error={confirmPasswordError}
           />
-          {confirmPasswordError && <Text style={styles.validationError}>{confirmPasswordError}</Text>}
         </View>
 
         <TouchableOpacity 
@@ -248,8 +242,9 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
+    justifyContent: 'flex-start',
+    padding: spacing.xl,
+    paddingTop: spacing.md,
     maxWidth: 400,
     width: '100%',
     alignSelf: 'center',
@@ -269,18 +264,14 @@ const styles = StyleSheet.create({
     color: colors.gray[600],
   },
   inputContainer: {
+    marginTop: spacing.md,
     marginBottom: spacing.lg,
   },
   input: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.gray[200],
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
     fontSize: typography.sizes.base,
     color: colors.dark,
-    ...shadows.sm,
+    width: '100%',
   },
   button: {
     backgroundColor: colors.primary,

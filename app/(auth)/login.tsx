@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, ActivityIndicator, Alert, Animated } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Alert, Animated } from 'react-native';
+import CustomTextInput from '@/src/components/CustomTextInput';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
@@ -92,10 +93,8 @@ export default function LoginScreen() {
         
         <View style={styles.inputContainer}>
           {/* <Text style={styles.inputLabel}>Email</Text> */}
-          <TextInput
-            style={[styles.input, emailError && styles.inputError]}
-            placeholder="Your email"
-            placeholderTextColor={colors.gray[400]}
+          <CustomTextInput
+            label="Email"
             value={email}
             onChangeText={(text) => {
               setEmail(text);
@@ -103,34 +102,33 @@ export default function LoginScreen() {
             }}
             autoCapitalize="none"
             keyboardType="email-address"
+            error={emailError}
           />
-          {emailError && <Text style={styles.validationError}>{emailError}</Text>}
           
-          {/* <Text style={styles.inputLabel}>Password</Text> */}
           <View style={styles.passwordContainer}>
-            <TextInput
-              style={[styles.passwordInput, passwordError && styles.inputError]}
-              placeholder="Password"
-              placeholderTextColor={colors.gray[400]}
+            <CustomTextInput
+              label="Password"
               value={password}
               onChangeText={(text) => {
                 setPassword(text);
                 setPasswordError('');
               }}
               secureTextEntry={!showPassword}
+              error={passwordError}
+              trailing={props => (
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <Ionicons
+                    name={showPassword ? "eye-off" : "eye"}
+                    size={24}
+                    color={colors.gray[400]}
+                  />
+                </TouchableOpacity>
+              )}
             />
-            <TouchableOpacity 
-              style={styles.passwordToggle}
-              onPress={() => setShowPassword(!showPassword)}
-            >
-              <Ionicons 
-                name={showPassword ? "eye-off" : "eye"} 
-                size={24} 
-                color={colors.gray[400]} 
-              />
-            </TouchableOpacity>
           </View>
-          {passwordError && <Text style={styles.validationError}>{passwordError}</Text>}
+          {/* Removed duplicate password error message */}
         </View>
         
         <TouchableOpacity 
@@ -198,15 +196,10 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   input: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.gray[200],
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    marginBottom: spacing.xs,
+    marginBottom: spacing.md,
     fontSize: typography.sizes.base,
     color: colors.dark,
-    ...shadows.sm,
+    width: '100%',
   },
   button: {
     backgroundColor: colors.primary,
@@ -277,15 +270,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   passwordInput: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.gray[200],
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
     paddingRight: spacing.xl,
     fontSize: typography.sizes.base,
     color: colors.dark,
-    ...shadows.sm,
   },
   passwordToggle: {
     position: 'absolute',
