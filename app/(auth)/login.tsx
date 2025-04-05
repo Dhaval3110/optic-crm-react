@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Alert, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert, Animated } from 'react-native';
 import CustomTextInput from '@/src/components/CustomTextInput';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
-import { colors, typography, spacing, shadows, borderRadius } from '@/constants/Theme';
+import { colors } from '@/constants/Theme';
+import { globalStyles as GlobalStyles } from '@/constants/Theme';
+
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -68,33 +70,47 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await signIn(email, password);
+      // Check for authentication error from context
+      if (error) {
+        // Error is already set in the AuthContext and will be displayed in the UI
+        return;
+      }
+      // Only navigate on successful login
+      router.replace('/(tabs)');
     } catch (err) {
       console.error('Login error:', err);
+      // No need for Alert as we're showing error from AuthContext
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[GlobalStyles.container, { backgroundColor: colors.light }]}>
       <Stack.Screen options={{ title: 'Login', headerShown: false }} />
       
-      <Animated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
-        <View style={styles.logoContainer}>
-          <Text style={styles.title}>Let's Sign you in.</Text>
-          <Text style={styles.subtitle}>Welcome back, You've been missed!</Text>
+      <Animated.View 
+        style={[
+          GlobalStyles.formContainer, 
+          GlobalStyles.centerContent,
+          { opacity: fadeAnim }
+        ]}
+      >
+        <View style={[GlobalStyles.centerContent, GlobalStyles.mb4]}>
+          <Text style={[GlobalStyles.title, { textAlign: 'center', color: colors.primary }]}>Let's Sign you in.</Text>
+          <Text style={[GlobalStyles.subtitle, { marginTop: 8 }]}>Welcome back, You've been missed!</Text>
         </View>
         
         {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
+          <View style={[GlobalStyles.card, { backgroundColor: colors.danger }, GlobalStyles.mb3, { width: '100%' }]}>
+            <Text style={[GlobalStyles.errorText, { color: colors.white, textAlign: 'center' }]}>{error}</Text>
           </View>
         )}
         
-        <View style={styles.inputContainer}>
-          {/* <Text style={styles.inputLabel}>Email</Text> */}
+        <View style={[GlobalStyles.inputContainer, { width: '100%', maxWidth: 400 }]}>
           <CustomTextInput
             label="Email"
+            placeholder="Email"
             value={email}
             onChangeText={(text) => {
               setEmail(text);
@@ -105,188 +121,65 @@ export default function LoginScreen() {
             error={emailError}
           />
           
-          <View style={styles.passwordContainer}>
-            <CustomTextInput
-              label="Password"
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                setPasswordError('');
-              }}
-              secureTextEntry={!showPassword}
-              error={passwordError}
-              trailing={props => (
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-off" : "eye"}
-                    size={24}
-                    color={colors.gray[400]}
-                  />
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-          {/* Removed duplicate password error message */}
+          <CustomTextInput
+            label="Password"
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => {
+              setPassword(text);
+              setPasswordError('');
+            }}
+            secureTextEntry={!showPassword}
+            error={passwordError}
+            trailing={props => (
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={{ padding: 8 }}
+              >
+                <Ionicons
+                  name={showPassword ? "eye-off" : "eye"}
+                  size={24}
+                  color={colors.gray[400]}
+                />
+              </TouchableOpacity>
+            )}
+          />
         </View>
         
-        <TouchableOpacity 
-          style={styles.forgotPasswordButton}
-          onPress={() => console.log('Navigate to forgot password')}
-        >
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
+        <View style={[{ width: '100%', maxWidth: 400 }]}>
+          <TouchableOpacity 
+            style={[GlobalStyles.row, { justifyContent: 'flex-end' }, GlobalStyles.mb3]}
+            onPress={() => router.push('/(auth)/forgot-password')}
+          >
+            <Text style={GlobalStyles.link}>Forgot Password?</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.button, loading && styles.buttonDisabled]} 
-          onPress={handleLogin}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color={colors.white} />
-          ) : (
-            <Text style={styles.buttonText}>Sign In</Text>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity 
+            style={[GlobalStyles.button, loading && GlobalStyles.buttonDisabled]} 
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={colors.white} />
+            ) : (
+              <Text style={GlobalStyles.buttonText}>Sign In</Text>
+            )}
+          </TouchableOpacity>
 
-        <View style={styles.dividerContainer}>
-          <Text style={styles.dividerText}>Don't have an account?</Text>
+          <View style={[GlobalStyles.centerContent, GlobalStyles.my3]}>
+            <Text style={GlobalStyles.subtitle}>Don't have an account?</Text>
+          </View>
+
+          <TouchableOpacity 
+            style={GlobalStyles.secondaryButton}
+            onPress={() => router.push('/(auth)/signup')}
+          >
+            <Text style={GlobalStyles.secondaryButtonText}>Create an account</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity 
-          style={styles.signupButton}
-          onPress={() => router.push('/(auth)/signup')}
-        >
-          <Text style={styles.signupButtonText}>Create an account</Text>
-        </TouchableOpacity>
       </Animated.View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.light,
-  },
-  formContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: spacing.xl,
-    maxWidth: 400,
-    width: '100%',
-    alignSelf: 'center',
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: spacing.xl,
-  },
-  title: {
-    fontSize: typography.sizes['4xl'],
-    fontWeight: typography.weights.bold,
-    color: colors.primary,
-    marginBottom: spacing.xs,
-  },
-  subtitle: {
-    fontSize: typography.sizes.lg,
-    color: colors.gray[600],
-  },
-  inputContainer: {
-    marginBottom: spacing.lg,
-  },
-  input: {
-    marginBottom: spacing.md,
-    fontSize: typography.sizes.base,
-    color: colors.dark,
-    width: '100%',
-  },
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadows.md,
-  },
-  buttonDisabled: {
-    backgroundColor: colors.gray[400],
-  },
-  buttonText: {
-    color: colors.white,
-    fontSize: typography.sizes.base,
-    fontWeight: typography.weights.semibold,
-  },
-  errorContainer: {
-    backgroundColor: colors.danger,
-    padding: spacing.sm,
-    borderRadius: borderRadius.md,
-    marginBottom: spacing.lg,
-  },
-  errorText: {
-    color: colors.white,
-    textAlign: 'center',
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.medium,
-  },
-  inputError: {
-    borderColor: colors.danger,
-    borderWidth: 1,
-  },
-  validationError: {
-    color: colors.danger,
-    fontSize: typography.sizes.sm,
-    marginTop: spacing.xs,
-    marginBottom: spacing.xs,
-  },
-  signupButton: {
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.md,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    ...shadows.sm,
-  },
-  signupButtonText: {
-    color: colors.primary,
-    fontSize: typography.sizes.base,
-    fontWeight: typography.weights.semibold,
-  },
-  dividerContainer: {
-    alignItems: 'center',
-    marginVertical: spacing.sm,
-  },
-  dividerText: {
-    color: colors.gray[600],
-    fontSize: typography.sizes.sm,
-    marginBottom: spacing.xs,
-    fontWeight: typography.weights.medium,
-  },
-  passwordContainer: {
-    position: 'relative',
-    marginBottom: spacing.xs,
-  },
-  passwordInput: {
-    paddingRight: spacing.xl,
-    fontSize: typography.sizes.base,
-    color: colors.dark,
-  },
-  passwordToggle: {
-    position: 'absolute',
-    right: spacing.md,
-    top: '50%',
-    transform: [{ translateY: -12 }],
-  },
-  forgotPasswordButton: {
-    alignSelf: 'flex-end',
-    marginBottom: spacing.md,
-  },
-  forgotPasswordText: {
-    color: colors.primary,
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.medium,
-  },
-});
+// Using GlobalStyles instead of local styles

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Animated, ScrollView } from 'react-native';
+import { globalStyles as GlobalStyles } from '@/constants/Theme';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
-import { colors, typography, spacing, shadows, borderRadius } from '@/constants/Theme';
+import { colors } from '@/constants/Theme';
 import { Ionicons } from '@expo/vector-icons';
 import CustomTextInput from '@/src/components/CustomTextInput';
 
@@ -23,6 +24,7 @@ export default function SignupScreen() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(0));
 
   React.useEffect(() => {
@@ -115,7 +117,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.container}>
       <Stack.Screen options={{ 
         title: 'Create Account',
         headerShown: true,
@@ -128,7 +130,7 @@ export default function SignupScreen() {
         },
         headerLeft: () => (
           <TouchableOpacity 
-            style={[styles.backButton, { marginLeft: -spacing.sm }]}
+            style={GlobalStyles.mx2}
             onPress={() => router.back()}
           >
             <Ionicons name="arrow-back" size={24} color={colors.white} />
@@ -136,12 +138,16 @@ export default function SignupScreen() {
         )
       }} />
 
-      <Animated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
-
-        
-        <View style={styles.inputContainer}>
+      <ScrollView 
+        style={{ flex: 1, width: '100%' }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <Animated.View style={[GlobalStyles.formContainer, { opacity: fadeAnim }]}>
+          <View style={GlobalStyles.inputContainer}>
           <CustomTextInput
             label="First Name"
+            placeholder="First Name"
             value={firstName}
             onChangeText={(text) => {
               setFirstName(text);
@@ -153,6 +159,7 @@ export default function SignupScreen() {
 
           <CustomTextInput
             label="Last Name"
+            placeholder="Last Name"
             value={lastName}
             onChangeText={(text) => {
               setLastName(text);
@@ -164,6 +171,7 @@ export default function SignupScreen() {
 
           <CustomTextInput
             label="Shop Name"
+            placeholder="Shop Name (optional)"
             value={shopName}
             onChangeText={(text) => {
               setShopName(text);
@@ -175,6 +183,7 @@ export default function SignupScreen() {
 
           <CustomTextInput
             label="City"
+            placeholder="City (optional)"
             value={city}
             onChangeText={(text) => {
               setCity(text);
@@ -186,6 +195,7 @@ export default function SignupScreen() {
 
           <CustomTextInput
             label="Email"
+            placeholder="Email"
             value={email}
             onChangeText={(text) => {
               setEmail(text);
@@ -198,105 +208,45 @@ export default function SignupScreen() {
           
           <CustomTextInput
             label="Password"
+            placeholder="Password"
             value={password}
             onChangeText={(text) => {
               setPassword(text);
               setPasswordError('');
             }}
-            secureTextEntry
             error={passwordError}
           />
 
           <CustomTextInput
             label="Confirm Password"
+            placeholder="Confirm Password"
             value={confirmPassword}
             onChangeText={(text) => {
               setConfirmPassword(text);
               setConfirmPasswordError('');
             }}
-            secureTextEntry
             error={confirmPasswordError}
           />
         </View>
 
-        <TouchableOpacity 
-          style={[styles.button, loading && styles.buttonDisabled]} 
-          onPress={handleSignup}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color={colors.white} />
-          ) : (
-            <Text style={styles.buttonText}>Create Account</Text>
-          )}
-        </TouchableOpacity>
-      </Animated.View>
+        <View style={[{ width: '100%', maxWidth: 400 }]}>
+          <TouchableOpacity 
+            style={[GlobalStyles.button, loading && GlobalStyles.buttonDisabled]} 
+            onPress={handleSignup}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={colors.white} />
+            ) : (
+              <Text style={GlobalStyles.buttonText}>Create Account</Text>
+            )}
+          </TouchableOpacity>
+
+
+        </View>
+        </Animated.View>
+      </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.light,
-  },
-  formContainer: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    padding: spacing.xl,
-    paddingTop: spacing.md,
-    maxWidth: 400,
-    width: '100%',
-    alignSelf: 'center',
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: spacing.lg,
-  },
-  title: {
-    fontSize: typography.sizes['4xl'],
-    fontWeight: typography.weights.bold,
-    color: colors.primary,
-    marginBottom: spacing.xs,
-  },
-  subtitle: {
-    fontSize: typography.sizes.lg,
-    color: colors.gray[600],
-  },
-  inputContainer: {
-    marginTop: spacing.md,
-    marginBottom: spacing.lg,
-  },
-  input: {
-    marginBottom: spacing.md,
-    fontSize: typography.sizes.base,
-    color: colors.dark,
-    width: '100%',
-  },
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadows.md,
-  },
-  buttonDisabled: {
-    backgroundColor: colors.gray[400],
-  },
-  buttonText: {
-    color: colors.white,
-    fontSize: typography.sizes.base,
-    fontWeight: typography.weights.semibold,
-  },
-  validationError: {
-    color: colors.danger,
-    fontSize: typography.sizes.sm,
-    marginTop: spacing.xs,
-    marginBottom: spacing.sm,
-  },
-  inputError: {
-    borderColor: colors.danger,
-    borderWidth: 1,
-  },
-});
+// Using GlobalStyles instead of local styles
