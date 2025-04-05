@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, Animated, ScrollView } from 'react-native';
-import { GlobalStyles } from '@/src/styles/GlobalStyles';
+import { globalStyles as GlobalStyles } from '@/constants/Theme';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 import { colors } from '@/constants/Theme';

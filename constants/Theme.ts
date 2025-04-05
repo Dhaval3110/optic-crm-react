@@ -95,6 +95,17 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.light
   },
+  formContainer: {
+    flex: 1,
+    padding: spacing.lg,
+    width: '100%',
+    maxWidth: 400,
+    alignSelf: 'center'
+  },
+  inputContainer: {
+    gap: spacing.md,
+    marginBottom: spacing.lg
+  },
   input: {
     backgroundColor: colors.white,
     borderWidth: 1,
@@ -113,9 +124,66 @@ export const globalStyles = StyleSheet.create({
     justifyContent: 'center',
     ...shadows.md
   },
+  buttonDisabled: {
+    opacity: 0.7
+  },
   buttonText: {
     color: colors.white,
     fontSize: typography.sizes.base,
     fontWeight: typography.weights.semibold
-  }
+  },
+  secondaryButton: {
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.md,
+    padding: spacing.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.primary,
+    ...shadows.sm
+  },
+  secondaryButtonText: {
+    color: colors.primary,
+    fontSize: typography.sizes.base,
+    fontWeight: typography.weights.semibold
+  },
+  title: {
+    fontSize: typography.sizes['3xl'],
+    fontWeight: typography.weights.bold,
+    color: colors.dark
+  },
+  subtitle: {
+    fontSize: typography.sizes.base,
+    color: colors.gray[500]
+  },
+  link: {
+    color: colors.primary,
+    fontSize: typography.sizes.base,
+    fontWeight: typography.weights.medium
+  },
+  errorText: {
+    color: colors.danger,
+    fontSize: typography.sizes.sm
+  },
+  centerContent: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  spaceBetween: {
+    justifyContent: 'space-between'
+  },
+  card: {
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    ...shadows.sm
+  },
+  mb2: { marginBottom: spacing.sm },
+  mb3: { marginBottom: spacing.md },
+  mb4: { marginBottom: spacing.lg },
+  my3: { marginVertical: spacing.md },
+  mx2: { marginHorizontal: spacing.sm }
 });

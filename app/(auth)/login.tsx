@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 import { colors } from '@/constants/Theme';
-import { GlobalStyles } from '@/src/styles/GlobalStyles';
+import { globalStyles as GlobalStyles } from '@/constants/Theme';
 
 
 export default function LoginScreen() {
@@ -97,7 +97,7 @@ export default function LoginScreen() {
         ]}
       >
         <View style={[GlobalStyles.centerContent, GlobalStyles.mb4]}>
-          <Text style={[GlobalStyles.title, { textAlign: 'center' }]}>Let's Sign you in.</Text>
+          <Text style={[GlobalStyles.title, { textAlign: 'center', color: colors.primary }]}>Let's Sign you in.</Text>
           <Text style={[GlobalStyles.subtitle, { marginTop: 8 }]}>Welcome back, You've been missed!</Text>
         </View>
         
